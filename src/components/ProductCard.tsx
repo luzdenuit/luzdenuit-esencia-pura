@@ -10,9 +10,9 @@ interface ProductCardProps {
   id?: string;
 }
 
-const ProductCard = ({ image, name, fragrance, price }: ProductCardProps) => {
+const ProductCard = ({ image, name, fragrance, price, id }: ProductCardProps) => {
   return (
-    <Link to="/producto">
+    <Link to={`/producto/${id}`}>
       <motion.div
         whileHover={{ y: -8 }}
         transition={{ duration: 0.3 }}
