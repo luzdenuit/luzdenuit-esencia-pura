@@ -7,8 +7,6 @@ import {
   Settings,
   Receipt 
 } from "lucide-react";
-import { supabase } from "@/lib/supabaseClient";
-
 interface AdminLinkProps {
   to: string;
   icon: React.ReactNode;
@@ -37,8 +35,8 @@ function AdminLink({ to, icon, children }: AdminLinkProps) {
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
 
-  const handleLogout = async () => {
-    await supabase.auth.signOut();
+  const handleLogout = () => {
+    // TODO: Conectar con Lovable Cloud para autenticación real
     window.location.href = "/login";
   };
 
