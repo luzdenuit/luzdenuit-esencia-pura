@@ -5,8 +5,10 @@ import {
   Tags, 
   LogOut, 
   Settings,
-  Receipt 
+  Receipt,
+  Flame
 } from "lucide-react";
+
 interface AdminLinkProps {
   to: string;
   icon: React.ReactNode;
@@ -18,17 +20,33 @@ function AdminLink({ to, icon, children }: AdminLinkProps) {
     <NavLink
       to={to}
       end
-      className={({ isActive }) =>
-        `flex items-center gap-3 px-3 py-2.5 rounded-md transition-colors duration-200
-        ${
-          isActive
-            ? "bg-primary/10 text-primary font-medium"
-            : "text-muted-foreground hover:bg-accent hover:text-accent-foreground"
-        }`
-      }
     >
-      {icon}
-      {children}
+      {({ isActive }) => (
+        <div
+          className={`group relative flex items-center gap-4 px-4 py-3 rounded-lg transition-all duration-300 overflow-hidden
+          ${
+            isActive
+              ? "bg-gradient-to-r from-primary/20 to-primary/10 text-primary font-medium shadow-sm"
+              : "text-muted-foreground hover:text-foreground hover:bg-accent/50"
+          }`}
+        >
+          {/* Hover effect background */}
+          <div className="absolute inset-0 bg-gradient-to-r from-primary/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+          
+          {/* Icon with scale animation */}
+          <div className="relative z-10 transition-transform duration-300 group-hover:scale-110">
+            {icon}
+          </div>
+          
+          {/* Text */}
+          <span className="relative z-10">{children}</span>
+          
+          {/* Active indicator */}
+          {isActive && (
+            <div className="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-8 bg-primary rounded-r-full" />
+          )}
+        </div>
+      )}
     </NavLink>
   );
 }
@@ -44,40 +62,77 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
     <div className="flex min-h-screen w-full bg-background">
 
       {/* Sidebar */}
-      <aside className="w-64 bg-card shadow-sm border-r border-border">
-        <div className="px-6 py-6 border-b border-border">
-          <h1 className="text-2xl font-serif font-bold text-primary">Admin • Nuit</h1>
+      <aside className="w-72 bg-gradient-to-b from-card via-card to-card/95 shadow-xl border-r border-border/50 backdrop-blur-sm">
+        
+        {/* Header con logo */}
+        <div className="px-6 py-8 border-b border-border/50">
+          <div className="flex items-center gap-3">
+            <div className="p-2 rounded-lg bg-gradient-to-br from-primary/20 to-primary/10 shadow-sm">
+              <Flame className="h-6 w-6 text-primary" />
+            </div>
+            <div>
+              <h1 className="text-xl font-serif font-bold text-foreground tracking-wide">
+                Luz de Nuit
+              </h1>
+              <p className="text-xs text-muted-foreground">Panel de administración</p>
+            </div>
+          </div>
         </div>
 
-        <nav className="mt-6 flex flex-col gap-1 px-4">
-          <AdminLink to="/admin" icon={<LayoutDashboard size={18} />}>
-            Dashboard
-          </AdminLink>
+        {/* Navigation */}
+        <nav className="flex-1 px-4 py-6">
+          <div className="space-y-2">
+            <AdminLink to="/admin" icon={<LayoutDashboard size={20} />}>
+              Dashboard
+            </AdminLink>
 
-          <AdminLink to="/admin/pedidos" icon={<Receipt size={18} />}>
-            Pedidos
-          </AdminLink>
+            <AdminLink to="/admin/pedidos" icon={<Receipt size={20} />}>
+              Pedidos
+            </AdminLink>
 
-          <AdminLink to="/admin/productos" icon={<Package size={18} />}>
-            Productos
-          </AdminLink>
+            <AdminLink to="/admin/productos" icon={<Package size={20} />}>
+              Productos
+            </AdminLink>
 
-          <AdminLink to="/admin/categorias" icon={<Tags size={18} />}>
-            Categorías
-          </AdminLink>
+            <AdminLink to="/admin/categorias" icon={<Tags size={20} />}>
+              Categorías
+            </AdminLink>
+          </div>
 
-          <AdminLink to="/admin/settings" icon={<Settings size={18} />}>
-            Configuración
-          </AdminLink>
+          {/* Separator */}
+          <div className="my-6 h-px bg-border/50" />
 
-          <button
-            onClick={handleLogout}
-            className="mt-6 flex items-center gap-3 px-3 py-2.5 rounded-md text-destructive hover:bg-destructive/10 transition-colors duration-200"
-          >
-            <LogOut size={18} /> 
-            Cerrar sesión
-          </button>
+          {/* Settings */}
+          <div className="space-y-2">
+            <AdminLink to="/admin/settings" icon={<Settings size={20} />}>
+              Configuración
+            </AdminLink>
+
+            <button
+              onClick={handleLogout}
+              className="group relative w-full flex items-center gap-4 px-4 py-3 rounded-lg text-destructive hover:bg-destructive/10 transition-all duration-300 overflow-hidden"
+            >
+              <div className="absolute inset-0 bg-gradient-to-r from-destructive/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+              <div className="relative z-10 transition-transform duration-300 group-hover:scale-110">
+                <LogOut size={20} />
+              </div>
+              <span className="relative z-10 font-medium">Cerrar sesión</span>
+            </button>
+          </div>
         </nav>
+
+        {/* Footer del sidebar */}
+        <div className="px-6 py-4 border-t border-border/50">
+          <div className="flex items-center gap-3 p-3 rounded-lg bg-accent/30">
+            <div className="h-10 w-10 rounded-full bg-gradient-to-br from-primary to-primary/70 flex items-center justify-center text-primary-foreground font-serif font-bold">
+              A
+            </div>
+            <div className="flex-1">
+              <p className="text-sm font-medium text-foreground">Admin</p>
+              <p className="text-xs text-muted-foreground">admin@luzdenuit.com</p>
+            </div>
+          </div>
+        </div>
       </aside>
 
       {/* Contenido principal */}
